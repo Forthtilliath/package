@@ -1,3 +1,8 @@
+## 0.5.0 - 05-21-2023
+
+- added isFieldNotNull - a function that checks if a given HTMLFieldElement is not null.
+- completed the README.md
+
 ## 0.4.0 - 05-20-2023
 
 - translated jsdoc to english
