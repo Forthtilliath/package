@@ -146,7 +146,36 @@ export function useRefFields<FieldName extends string>(
     );
   };
 
-  const actions = { setRef, getRef, getField, getAllRef, getFormData };
+  
+  /**
+   * The function checks if a given HTMLFieldElement is not null.
+   * @param {T | null} field - The `field` parameter is the HTMLFieldElement to verify.
+   * @returns The function `isFieldNotNull` returns a boolean value indicating whether the input
+   * `field` is not null. The function also uses a type predicate to narrow the type of `field` to `T`.
+   * 
+   * @example
+   * const field = getField(key);
+   * if(isFieldNotNull(field)) {
+   *   // here field is HTMLFieldElement
+   *   // your code
+   * } else {
+   *   throw new Error(`${key} is null`);
+   * }
+   */
+  const isFieldNotNull = <T extends HTMLFieldElement>(
+    field: T | null
+  ): field is T => {
+    return field !== null;
+  };
+
+  const actions = {
+    setRef,
+    getRef,
+    getField,
+    getAllRef,
+    getFormData,
+    isFieldNotNull,
+  };
   return [fieldsRef, actions] as const;
 }
 
