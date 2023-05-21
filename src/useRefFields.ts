@@ -1,52 +1,51 @@
-import { RefCallback } from "react";
-import { useRef } from "react";
+import { RefCallback, MutableRefObject, useRef } from "react";
 
 type HTMLFieldElement =
   | HTMLInputElement
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-/**
- * `useRefForm` crée un objet avec des références aux entrées de formulaire et
- * fournit des méthodes pour obtenir et définir leurs valeurs.
- * @param fields - Un tableau de chaînes représentant les noms des entrées de formulaire pour
- * lesquelles le crochet useRefForm sera utilisé.
- * @returns un tableau contenant deux éléments : le premier élément est un objet `useRef` initialisé
- * avec un objet contenant des valeurs nulles pour chaque entrée, et le deuxième élément est un objet
- * contenant des fonctions pour interagir avec l'objet `useRef`.
+/** `useRefForm` creates an object with references to form inputs and
+ * provides methods to get and set their values.
+ * @param fields - An array of strings representing the form input names for which useRefForm hook
+ * will be used.
+ * @returns an array containing two elements: the first element is an initialized `useRef`
+ * object with an object containing null values for each input, and the second
+ * element is an object containing functions to interact with the `useRef` object.
  *
- * Les fonctions incluent `setRef` pour définir la référence d'un élément d'entrée à
- * l'objet `useRef`, `getRef` pour obtenir la valeur d'un élement d'entrée,
- * `getAllRef` pour obtenir un objet avec pour clé le nom de l'élément et pour
- * valeur la valeur de l'élément et `getFormData` pour obtenir un FormData prêt à
- * être envoyé.
+ * Functions include `setRef` to set the reference of an input element to the
+ * `useRef`, `getRef` to get the value of a field, `getField` to get the field,
+ * `getAllRef` to get an object with the element name as key and to value the
+ * element value and `getFormData` to get a ready-to-use FormData be sent.
  *
  * @example
  * useRefForm(['username', 'password'])
- * // => fieldsRef (à l'initialisation)
+ * // => fieldsRef (after initialisation, before setting)
  * {
  *   username: null,
  *   password: null
  * }
  *
  * <input ref={setRef('username')} />
- * // => fieldsRef (affecte l'input avec la clé `username`)
+ * // => fieldsRef (allocate the field to key `username`)
  * {
  *   username: HTMLInputElement,
  *   password: null
  * }
  *
- * getRef('username') // Retourne la valeur contenue dans le champ
+ * getField('username') // Get the field with the key `username`
+ *
+ * getRef('username') // Get the value in the field (like an `input.value`)
  *
  * getAllRef()
- * // Retourne les valeurs contenus dans les champs sous la forme suivante
+ * // Returns the values contained in the fields in the following form
  * {
  *   username: 'myusername',
  *   password: 'secret'
  * }
  *
  * getFormData()
- * // Retourne un FormData sous la forme suivante
+ * // Returns a FormData in the following form
  * [
  *   ['username', 'myusername'],
  *   ['password', 'secret']
@@ -62,15 +61,12 @@ export function useRefFields<FieldName extends string>(
     {}
   ) as Fields;
 
-  const fieldsRef = useRef<Fields>(initialState);
+  const fieldsRef: MutableRefObject<Fields> = useRef<Fields>(initialState);
 
   /**
-   * `setRef` envoie une fonction de rappel pour définir une référence à un élément
-   * de champ HTMLFieldElement en fonction d'une clé donnée.
-   * @param {FieldName} key - Clé correspondant à une valeur contenue dans le tableau
-   * `fields`.
-   * @returns `setRef` retourne un callback utilisé pour mettre à jour la référence
-   * liée à la clé donnée.
+   * `setRef` sends a callback function to set a reference based on a given key.
+   * @param {FieldName} key - Key corresponding to a value contained in the array `fields`.
+   * @returns `setRef` returns a callback used to update the reference bound to the given key.
    */
   const setRef =
     (key: FieldName): RefCallback<HTMLFieldElement> =>
@@ -79,9 +75,9 @@ export function useRefFields<FieldName extends string>(
     };
 
   /**
-   * `getRef` retourne la valeur contenue dans la référence du fieldsRef à la clé donnée.
-   * @param {FieldName} key - Le paramètre `key` est utilisé comme clé pour accéder à une valeur dans l'objet
-   * `inputsRef.current`.
+   * `getRef` returns the value contained in the fieldsRef reference to the given key.
+   * @param {FieldName} key - The `key` parameter is used as a key to access a value in the
+   * `inputsRef.current` object.
    *
    * @example
    * getRef('username')
@@ -94,28 +90,27 @@ export function useRefFields<FieldName extends string>(
   };
 
   /**
-   * `getRef` retourne l'élément contenu dans la référence du fieldsRef à la clé donnée.
-   * @param {FieldName} key - Le paramètre `key` est utilisé comme clé pour accéder à une valeur dans l'objet
-   * `inputsRef.current`.
+   * `getField` returns the element contained in the fieldsRef reference to the given key.
+   * @param {FieldName} key - The `key` parameter is used as a key to access a value in the
+   * `inputsRef.current` object.
    *
    * @example
    * getField('username')
    */
   const getField = <T extends HTMLFieldElement = HTMLFieldElement>(
     key: FieldName
-  ): T => {
+  ) => {
     assertIsDefined(fieldsRef.current[key], key);
 
-    return fieldsRef.current[key];
+    return fieldsRef.current[key] as T;
   };
 
   /**
-   * `getAllRef` renvoie un objet contenant des valeurs à partir d'une liste de
-   * références d'entrée.
+   * `getAllRef` returns an object containing values from a list of input references.
    *
    * @example
    * getAllRef()
-   * // Retourne les valeurs contenus dans les champs sous la forme suivante
+   * // Returns the values contained in the fields in the following form
    * {
    *   username: 'myusername',
    *   password: 'secret'
@@ -132,12 +127,11 @@ export function useRefFields<FieldName extends string>(
   };
 
   /**
-   * `getFormData` obtient des données de formulaire à partir des champs d'entrée et les renvoie sous la
-   * forme d'un objet FormData.
+   * `getFormData` gets form data from input fields and returns it as a FormData object.
    *
    * @example
    * getFormData()
-   * // Retourne un FormData sous la forme suivante
+   * // Returns a FormData in the following form
    * [
    *   ['username', 'myusername'],
    *   ['password', 'secret']
@@ -157,8 +151,8 @@ export function useRefFields<FieldName extends string>(
 }
 
 /**
- * Type des actions de useRefFields. `Keys` est un Union Type des valeurs du
- * tableau passées en arguments de useRefFields.
+ * Type of useRefFields actions. `Keys` is a Union Type of the array values
+ * passed as arguments to useRefFields.
  *
  * @example
  * export const connexionInputs = ['username', 'password'] as const
@@ -171,7 +165,7 @@ export function useRefFields<FieldName extends string>(
  *   getFormData: () => FormData;
  * }
  *
- * // Pour récupérer le type précis d'une des méthodes actions
+ * // To retrieve the specific type of one of the action methods
  * type SetRefField = Actions['setRef']
  * //^?
  * type SetRefField = (key: "username" | "password") => RefCallback<HTMLFieldElement>
@@ -181,17 +175,17 @@ export type UseRefFieldsActions<Keys extends string> = ReturnType<
 >[1];
 
 /**
- * Cette fonction affirme qu'une valeur est définie et non nulle ou indéfinie.
- * @param {T} value - La valeur qui doit être vérifiée pour être définie (pas undefined ou null).
- * @param {string} key - Le paramètre clé est une chaîne qui représente le nom ou l'identifiant de la
- * variable ou de la propriété en cours de vérification pour être définie ou non. Il est utilisé dans
- * le message d'erreur pour indiquer quelle référence n'est pas définie.
+ * This function asserts that a value is definite and not null or undefined.
+ * @param {T} value - The value that must be checked to be set (not undefined or null).
+ * @param {string} key - The key parameter is a string that represents the name or
+ * identifier of the variable or property being checked to be set or not. It is used
+ * in the error message to indicate which reference is not set.
  */
 function assertIsDefined<T>(
   value: T,
   key: string
 ): asserts value is NonNullable<T> {
   if (value === undefined || value === null) {
-    throw new Error(`La référence ${key} n'est pas affectée !`);
+    throw new Error(`The ${key} reference is not affected!`);
   }
 }
