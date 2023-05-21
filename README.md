@@ -26,30 +26,31 @@ pnpm install react-usereffields
 
 ## Usage
 
-You can either use the hook:
+Here are some examples of how you can use the useRefFields hook:
+
+##### JSX
 
 ```tsx
-import { UseRefFieldsActions } from "react-usereffields";
-import styles from "./DeckForm.module.css";
+import { useRefFields } from "react-usereffields";
 
-export function SignUpForm() {
-  const [, { setRef, getFormData }] = useRefFields([
-    "username",
-    "password",
-    "gender",
-    "message",
-  ]);
+export function MyForm() {
+  const [
+    fieldsRef,
+    { setRef, getRef, getField, getAllRef, getFormData, isFieldNotNull },
+  ] = useRefFields(["username", "password", "gender", "message"]);
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
-
-    // Do something with the data
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = () => {
+    const usernameField = getField("username");
+    if (isFieldNotNull(usernameField)) {
+      console.log(usernameField.value);
+    }
+    console.log(getRef("password"));
+    console.log(getAllRef());
     console.log(Object.fromEntries(getFormData()));
-    // => { username: 'forthtilliath', password: 'secret', gender: 'male', message: 'it works!!!'}
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <input type="text" ref={setRef("username")} placeholder="Username" />
       <input type="password" ref={setRef("password")} placeholder="Password" />
       <select ref={setRef("gender")} defaultValue={"default"}>
@@ -66,31 +67,20 @@ export function SignUpForm() {
   );
 }
 ```
+In the example above, we are creating a form with two input fields, one for the username and one for the password, a selection field for the gender and a text box for a message. We create a reference to each input field using the setRef function. When the user clicks the submit button, we log the values of the username field, the password field, all fields, and the form data.
 
 ## useRefFields return
 
-useRefFields returns an array.
+The hook returns an array containing two elements:
+- The first element is an initialized ``useRef`` object with an object containing null values for each input.
+- The second element is an object containing functions to interact with the ``useRef`` object.
 
-### First key : refs {.tabset}
+### First key : refs
 
 The first element is the reference which contains all fields. You can access them in the following way :
 
+##### JSX / TSX
 
-#### JSX
-```tsx
-const [myFormRef, actions] = useRefFields(myFields);
-
-const checkInput = () => {
-  // Focus the input if it's empty
-  // myInput has the type HTMLFieldElement | null
-  // HTMLFieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  const myInput = refs.current.username;
-  if (myInput && myInput.value === "") {
-    myInput.focus();
-  }
-};
-```
-#### TSX
 ```tsx
 const [myFormRef, actions] = useRefFields(myFields);
 
@@ -109,13 +99,114 @@ const checkInput = () => {
 
 The second element is an object which contains all actions.
 
+#### setRef
+
+`setRef` returns a callback used to update the reference bound to the given key.
+
+##### JSX / TSX
+
 ```tsx
-const [, { getField }] = useRefFields(myFields);
+<input type="text" ref={setRef("username")} placeholder="Username" />
+```
+
+#### getRef
+
+`getRef` returns the value contained in the fieldsRef reference to the given key.
+
+##### JSX / TSX
+
+```tsx
+const [, { getRef }] = useRefFields(["username", "password"]);
+
+const handleSubmit = () => {
+  console.log(getRef("username"));
+};
+```
+
+#### getField
+
+`getField` returns the element contained in the fieldsRef reference to the given key.
+
+##### JSX
+
+```jsx
+const [, { getField }] = useRefFields(["username", "password"]);
+
+const checkInput = () => {
+  const myUsernameInput = getField("username");
+  if (myUsernameInput.value === "") {
+    myUsernameInput.focus();
+  }
+};
+```
+
+##### TSX
+
+```tsx
+const [, { getField }] = useRefFields(["username", "password"]);
 
 const checkInput = () => {
   const myUsernameInput = getField<HTMLInputElement>("username");
   if (myUsernameInput.value === "") {
     myUsernameInput.focus();
+  }
+};
+```
+
+#### getAllRef
+
+`getAllRef` returns an object containing values from a list of input references.
+
+##### JSX / TSX
+
+```tsx
+const [, { getAllRef }] = useRefFields(["username", "password"]);
+
+const handleSubmit = () => {
+  console.log(getAllRef());
+};
+```
+
+#### getFormData
+
+`getFormData` gets form data from input fields and returns it as a FormData object.
+
+##### JSX / TSX
+
+```tsx
+const [, { getFormData }] = useRefFields(["username", "password"]);
+
+const handleSubmit = () => {
+  console.log(Object.fromEntries(getFormData()));
+};
+```
+
+#### isFieldNotNull
+
+`isFieldNotNull` is a function that checks if a given HTMLFieldElement is not null.
+
+##### JSX
+
+```jsx
+const focusIfEmpty = (key) => {
+  const field = getField(key);
+  if (isFieldNotNull(field) && getRef(key) === "") {
+    field.focus();
+  } else {
+    throw new Error(`${key} is null`);
+  }
+};
+```
+
+##### TSX
+
+```tsx
+const focusIfEmpty = (key: (typeof inputsName)[number]) => {
+  const field = getField(key);
+  if (isFieldNotNull(field) && getRef(key) === "") {
+    field.focus();
+  } else {
+    throw new Error(`${key} is null`);
   }
 };
 ```
