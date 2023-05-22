@@ -2,7 +2,6 @@
 
 [![github version](https://img.shields.io/github/package-json/v/Forthtilliath/react-usereffields?color=success)](https://img.shields.io/github/package-json/v/Forthtilliath/react-usereffields) [![github repo size](https://img.shields.io/github/repo-size/Forthtilliath/react-usereffields)](https://img.shields.io/github/repo-size/Forthtilliath/react-usereffields) [![npm download](https://img.shields.io/npm/dt/react-usereffields)](https://img.shields.io/npm/dt/react-usereffields) [![licence](https://img.shields.io/npm/l/react-usereffields)](https://img.shields.io/npm/l/react-usereffields)
 
-
 The react-useRefFields package is a library that provides a React hook called useRefFields. This hook allows you to manage form field references in a React component. It returns an array containing two elements: an object that contains the references for each field, and an object that contains functions to interact with these references.
 
 The useRefFields hook is useful for simplifying the management of form fields in a React component. It makes it easy to define references for each field and to interact with these references in a consistent way. The react-useRefFields package is easy to use and can be installed via NPM, Yarn or PNPM.
@@ -70,13 +69,15 @@ export function MyForm() {
   );
 }
 ```
+
 In the example above, we are creating a form with two input fields, one for the username and one for the password, a selection field for the gender and a text box for a message. We create a reference to each input field using the setRef function. When the user clicks the submit button, we log the values of the username field, the password field, all fields, and the form data.
 
 ## useRefFields return
 
 The hook returns an array containing two elements:
-- The first element is an initialized ``useRef`` object with an object containing null values for each input.
-- The second element is an object containing functions to interact with the ``useRef`` object.
+
+- The first element is an initialized `useRef` object with an object containing null values for each input.
+- The second element is an object containing functions to interact with the `useRef` object.
 
 ### First key : refs
 
@@ -189,25 +190,27 @@ const handleSubmit = () => {
 `isFieldNotNull` is a function that checks if a given HTMLFieldElement is not null.
 
 ##### JSX
+
 ```jsx
 const focusIfEmpty = (key) => {
   const field = getField(key);
-  if (isFieldNotNull(field) && getRef(key) === "") {
-    field.focus();
+  if (isFieldNotNull(field)) {
+    if (field.value === "") field.focus();
   } else {
-    throw new Error(`${key} is null`);
+      throw new Error(`The field with ${key} key is null`);
   }
 };
 ```
 
 ##### TSX
+
 ```tsx
 const focusIfEmpty = (key: (typeof inputsName)[number]) => {
   const field = getField(key);
-  if (isFieldNotNull(field) && getRef(key) === "") {
-    field.focus();
+  if (isFieldNotNull(field)) {
+    if (field.value === "") field.focus();
   } else {
-    throw new Error(`${key} is null`);
+      throw new Error(`The field with ${key} key is null`);
   }
 };
 ```
