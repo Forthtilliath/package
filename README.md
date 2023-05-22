@@ -1,6 +1,7 @@
 # react-useRefFields
 
-[![GitHub version](https://badge.fury.io/js/react-usereffields.svg)](https://badge.fury.io/js/react-usereffields)
+[![github version](https://img.shields.io/github/package-json/v/Forthtilliath/react-usereffields?color=success)](https://img.shields.io/github/package-json/v/Forthtilliath/react-usereffields) [![github repo size](https://img.shields.io/github/repo-size/Forthtilliath/react-usereffields)](https://img.shields.io/github/repo-size/Forthtilliath/react-usereffields) [![npm download](https://img.shields.io/npm/dt/react-usereffields)](https://img.shields.io/npm/dt/react-usereffields) [![licence](https://img.shields.io/npm/l/react-usereffields)](https://img.shields.io/npm/l/react-usereffields)
+
 
 The react-useRefFields package is a library that provides a React hook called useRefFields. This hook allows you to manage form field references in a React component. It returns an array containing two elements: an object that contains the references for each field, and an object that contains functions to interact with these references.
 

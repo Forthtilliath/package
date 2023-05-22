@@ -1,3 +1,11 @@
+## 0.7.0 - 05-22-2023
+
+-added badges version, repo size, download & licence
+
+## 0.6.0 - 05-22-2023
+
+- added licence file
+
 ## 0.5.0 - 05-21-2023
 
 - added isFieldNotNull - a function that checks if a given HTMLFieldElement is not null.
