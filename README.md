@@ -39,22 +39,35 @@ export function MyForm() {
   const [
     fieldsRef,
     { setRef, getRef, getField, getAllRef, getFormData, isFieldNotNull },
-  ] = useRefFields(["username", "password", "gender", "message"]);
+  ] = useRefFields(["username", "password", "gender", "message", "age"]);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = () => {
     const usernameField = getField("username");
     if (isFieldNotNull(usernameField)) {
       console.log(usernameField.value);
     }
-    console.log(getRef("password"));
+    console.log(getRef("age"));
     console.log(getAllRef());
     console.log(Object.fromEntries(getFormData()));
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Examples with inputs */}
       <input type="text" ref={setRef("username")} placeholder="Username" />
       <input type="password" ref={setRef("password")} placeholder="Password" />
+
+      {/* Examples with input radio */}
+      <label>
+        <span>Minor:</span>
+        <input type="radio" name="age" ref={setRef("age")} value="minor" />
+      </label>
+      <label>
+        <span>Minor:</span>
+        <input type="radio" name="age" ref={setRef("age")} value="major" />
+      </label>
+
+      {/* Examples with select */}
       <select ref={setRef("gender")} defaultValue={"default"}>
         <option value="default" disabled>
           Gender
@@ -63,6 +76,7 @@ export function MyForm() {
         <option value="female">Female</option>
         <option value="other">Other</option>
       </select>
+
       <textarea ref={setRef("message")} placeholder="Message" />
       <button type="submit">Submit</button>
     </form>
@@ -197,7 +211,7 @@ const focusIfEmpty = (key) => {
   if (isFieldNotNull(field)) {
     if (field.value === "") field.focus();
   } else {
-      throw new Error(`The field with ${key} key is null`);
+    throw new Error(`The field with ${key} key is null`);
   }
 };
 ```
@@ -210,7 +224,7 @@ const focusIfEmpty = (key: (typeof inputsName)[number]) => {
   if (isFieldNotNull(field)) {
     if (field.value === "") field.focus();
   } else {
-      throw new Error(`The field with ${key} key is null`);
+    throw new Error(`The field with ${key} key is null`);
   }
 };
 ```
