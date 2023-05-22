@@ -1,8 +1,10 @@
 # react-useRefFields
 
-[![npm version](https://badge.fury.io/js/react-usereffields.svg)](https://badge.fury.io/js/react-usereffields)
+[![GitHub version](https://badge.fury.io/js/react-usereffields.svg)](https://badge.fury.io/js/react-usereffields)
 
-Simple React hook to manage form fields.
+The react-useRefFields package is a library that provides a React hook called useRefFields. This hook allows you to manage form field references in a React component. It returns an array containing two elements: an object that contains the references for each field, and an object that contains functions to interact with these references.
+
+The useRefFields hook is useful for simplifying the management of form fields in a React component. It makes it easy to define references for each field and to interact with these references in a consistent way. The react-useRefFields package is easy to use and can be installed via NPM, Yarn or PNPM.
 
 ## Install
 
@@ -186,7 +188,6 @@ const handleSubmit = () => {
 `isFieldNotNull` is a function that checks if a given HTMLFieldElement is not null.
 
 ##### JSX
-
 ```jsx
 const focusIfEmpty = (key) => {
   const field = getField(key);
@@ -199,7 +200,6 @@ const focusIfEmpty = (key) => {
 ```
 
 ##### TSX
-
 ```tsx
 const focusIfEmpty = (key: (typeof inputsName)[number]) => {
   const field = getField(key);
