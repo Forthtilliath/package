@@ -1,3 +1,7 @@
+## 0.7.1 - 05-22-2023
+
+- fixed for input radios
+
 ## 0.7.0 - 05-22-2023
 
 -added badges version, repo size, download & licence

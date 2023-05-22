@@ -115,7 +115,7 @@ The second element is an object which contains all actions.
 
 #### getRef
 
-`getRef` returns the value contained in the fieldsRef reference to the given key.
+`getRef` returns the value contained in the fieldsRef reference to the given key. An input radio will return an empty string.
 
 ##### JSX / TSX
 
@@ -129,7 +129,7 @@ const handleSubmit = () => {
 
 #### getField
 
-`getField` returns the element contained in the fieldsRef reference to the given key.
+`getField` returns the element contained in the fieldsRef reference to the given key. An input radio will return an array of input which contains HTMLInputElement from the given key.
 
 ##### JSX
 

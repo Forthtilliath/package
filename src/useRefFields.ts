@@ -71,7 +71,17 @@ export function useRefFields<FieldName extends string>(
   const setRef =
     (key: FieldName): RefCallback<HTMLFieldElement> =>
     (ref: HTMLFieldElement) => {
-      if (fields.includes(key)) fieldsRef.current[key] = ref;
+      if (fields.includes(key)) {
+        if (ref.type === "radio") {
+          if (fieldsRef.current[key] === null) {
+            fieldsRef.current[key] = [ref];
+          } else {
+            fieldsRef.current[key].push(ref);
+          }
+        } else {
+          fieldsRef.current[key] = ref;
+        }
+      }
     };
 
   /**
@@ -85,6 +95,14 @@ export function useRefFields<FieldName extends string>(
    */
   const getRef = (key: FieldName): string => {
     assertIsDefined(fieldsRef.current[key], key);
+
+    // Array only for input radios
+    if (Array.isArray(fieldsRef.current[key])) {
+      return (
+        fieldsRef.current[key].find((radio: HTMLInputElement) => radio.checked)
+          ?.value ?? ""
+      );
+    }
 
     return fieldsRef.current[key]!.value;
   };
@@ -116,14 +134,18 @@ export function useRefFields<FieldName extends string>(
    *   password: 'secret'
    * }
    */
+  // const getAllRef = () => {
+  //   return fields.reduce(
+  //     (obj, key) => ({
+  //       ...obj,
+  //       [key]: getRef(key),
+  //       // [key]: fieldsRef.current[key]?.value,
+  //     }),
+  //     initialState
+  //   );
+  // };
   const getAllRef = () => {
-    return fields.reduce(
-      (obj, key) => ({
-        ...obj,
-        [key]: fieldsRef.current[key]?.value,
-      }),
-      initialState
-    );
+    return Object.fromEntries(getFormData());
   };
 
   /**
@@ -141,18 +163,17 @@ export function useRefFields<FieldName extends string>(
     fields.every((key) => assertIsDefined(fieldsRef.current[key], key));
 
     return fields.reduce(
-      (form, key) => (form.append(key, fieldsRef.current[key]!.value), form),
+      (form, key) => (form.append(key, getRef(key)), form),
       new FormData()
     );
   };
 
-  
   /**
    * The function checks if a given HTMLFieldElement is not null.
    * @param {T | null} field - The `field` parameter is the HTMLFieldElement to verify.
    * @returns The function `isFieldNotNull` returns a boolean value indicating whether the input
    * `field` is not null. The function also uses a type predicate to narrow the type of `field` to `T`.
-   * 
+   *
    * @example
    * const field = getField(key);
    * if(isFieldNotNull(field)) {

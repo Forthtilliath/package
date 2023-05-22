@@ -1,6 +1,6 @@
 {
   "name": "react-usereffields",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Custom hook to manage several fields in a form. With this hook, you can manage all of them with only one useRef nd get some actions to get an object with all values or a formData ready to be use",
   "main": "./src/useRefFields.ts",
   "scripts": {
