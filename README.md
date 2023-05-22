@@ -32,6 +32,60 @@ Here are some examples of how you can use the useRefFields hook:
 
 ##### JSX
 
+```jsx
+import { useRefFields } from "react-usereffields";
+
+export function MyForm() {
+  const [
+    fieldsRef,
+    { setRef, getRef, getField, getAllRef, getFormData, isFieldNotNull },
+  ] = useRefFields(["username", "password", "gender", "message", "age"]);
+
+  const handleSubmit = () => {
+    const usernameField = getField("username");
+    if (isFieldNotNull(usernameField)) {
+      console.log(usernameField.value);
+    }
+    console.log(getRef("age"));
+    console.log(getAllRef());
+    console.log(Object.fromEntries(getFormData()));
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Examples with inputs */}
+      <input type="text" ref={setRef("username")} placeholder="Username" />
+      <input type="password" ref={setRef("password")} placeholder="Password" />
+
+      {/* Examples with input radio */}
+      <label>
+        <span>Minor:</span>
+        <input type="radio" name="age" ref={setRef("age")} value="minor" />
+      </label>
+      <label>
+        <span>Minor:</span>
+        <input type="radio" name="age" ref={setRef("age")} value="major" />
+      </label>
+
+      {/* Examples with select */}
+      <select ref={setRef("gender")} defaultValue={"default"}>
+        <option value="default" disabled>
+          Gender
+        </option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <textarea ref={setRef("message")} placeholder="Message" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+##### TSX
+
 ```tsx
 import { useRefFields } from "react-usereffields";
 
@@ -84,7 +138,14 @@ export function MyForm() {
 }
 ```
 
-In the example above, we are creating a form with two input fields, one for the username and one for the password, a selection field for the gender and a text box for a message. We create a reference to each input field using the setRef function. When the user clicks the submit button, we log the values of the username field, the password field, all fields, and the form data.
+In the example above, we are creating a form with :
+
+- two input fields : `username` and `password`;
+- a radio selection for the `age`;
+- a selection field for the `gender`;
+- a text box for the `message`.
+
+We create a reference to each input field using the `setRef` function. When the user clicks the submit button, we log the values of the username field after to have check if the field is defined (with `setRef`), the age field, all fields, and the form data.
 
 ## useRefFields return
 
@@ -226,5 +287,31 @@ const focusIfEmpty = (key: (typeof inputsName)[number]) => {
   } else {
     throw new Error(`The field with ${key} key is null`);
   }
+};
+```
+
+## Utility types
+
+### UseRefFieldsActions
+
+The `UseRefFieldsActions` type helps to get the return type of the second parameter of the hook. This can be useful when you pass `setRef` to a child.
+
+##### TSX
+
+```tsx
+// In your form component
+export const connexionInputs = ["username", "password"] as const;
+
+// In your child component
+import { UseRefFieldsActions } from "react-usereffields";
+
+// Action contains all actions type
+type Action = UseRefFieldsActions<(typeof connexionInputs)[number]>;
+
+type Props = {
+  // Note the setRef to get only the type of the methode setRef
+  setRef: Action["setRef"];
+  // Same than
+  setRef: UseRefFieldsActions<(typeof connexionInputs)[number]>["setRef"];
 };
 ```
