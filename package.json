@@ -1,15 +1,7 @@
 {
   "name": "react-usereffields",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Custom hook to manage several fields in a form. With this hook, you can manage all of them with only one useRef nd get some actions to get an object with all values or a formData ready to be use",
-  "main": "./src/useRefFields.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type":"git",
-    "url":"https://github.com/Forthtilliath/react-usereffields.git"
-  },
   "keywords": [
     "react",
     "typescript",
@@ -18,6 +10,15 @@
     "form",
     "fields"
   ],
+  "homepage": "https://github.com/Forthtilliath/react-use-form-fields-ref#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Forthtilliath/react-use-form-fields-ref.git"
+  },
+  "license": "MIT",
   "author": "forthtilliath",
-  "license": "MIT"
+  "main": "./src/useRefFields.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }

@@ -1,3 +1,10 @@
+## 0.8.0 - 06-10-2023
+
+- move to [@forthtilliath/react-use-form-fields-ref](https://www.npmjs.com/package/@forthtilliath/react-use-form-fields-ref)
+- rename LICENSE file
+- update doc to redirect to new version
+- change links to github to new version
+
 ## 0.7.1 - 05-22-2023
 
 - fixed for input radios
